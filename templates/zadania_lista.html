@@ -1,8 +1,10 @@
 <!-- todo/templates/zadania_lista.html -->
 <html>
   <head>
-  <!-- nazwa aplikacji pobrana z ustawień -->
+    <!-- nazwa aplikacji pobrana z ustawień -->
     <title>{{ config.SITE_NAME }}</title>
+    <!-- dołączamy arkusz CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
     <h1>{{ config.SITE_NAME }}:</h1>
