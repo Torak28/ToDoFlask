@@ -67,6 +67,16 @@ def zrobione():
     flash('Zmieniono status zadania.')
     return redirect(url_for('zadania'))
 
+@app.route('/usuniete', methods=['POST'])
+def usuniete():
+    """Usuniecie zadania gdy wykonane."""
+    zadanie_id = request.form['id']
+    db = get_db()
+    db.execute('DELETE FROM zadania WHERE id=?', [zadanie_id])
+    db.commit()
+    flash('Usunieto zadanie.')
+    return redirect(url_for('zadania'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

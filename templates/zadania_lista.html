@@ -31,6 +31,11 @@
           <!-- wyróżnienie zadań zakończonych -->
           {% if zadanie.zrobione %}
             <span class="done">{{ zadanie.zadanie }} – <em>{{ zadanie.data_pub }}</em></span>
+            <form method="POST" action="{{ url_for('usuniete') }}">
+              <!-- wysyłamy jedynie informacje o id zadania -->
+              <input type="hidden" name="id" value="{{ zadanie.id }}"/>
+              <button type="submit">Usun</button>
+            </form>
           {% else %}
             {{ zadanie.zadanie }} – <em>{{ zadanie.data_pub }}</em>
           {% endif %}
