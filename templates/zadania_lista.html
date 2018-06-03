@@ -29,12 +29,15 @@
       {% for zadanie in zadania %}
         <li>
           <!-- wyróżnienie zadań zakończonych -->
+          <form method="POST" action="{{ url_for('usuniete') }}">
+            <input type="hidden" name="id" value="{{ zadanie.id }}"/>
+            <button type="submit">Usun</button>
+          </form>
           {% if zadanie.zrobione %}
             <span class="done">{{ zadanie.zadanie }} – <em>{{ zadanie.data_pub }}</em></span>
-            <form method="POST" action="{{ url_for('usuniete') }}">
-              <!-- wysyłamy jedynie informacje o id zadania -->
+            <form method="POST" action="{{ url_for('niezrobione') }}">
               <input type="hidden" name="id" value="{{ zadanie.id }}"/>
-              <button type="submit">Usun</button>
+              <button type="submit">Niewykonane</button>
             </form>
           {% else %}
             {{ zadanie.zadanie }} – <em>{{ zadanie.data_pub }}</em>
@@ -43,7 +46,6 @@
           <!-- formularz zmiany statusu zadania -->
           {% if not zadanie.zrobione %}
             <form method="POST" action="{{ url_for('zrobione') }}">
-              <!-- wysyłamy jedynie informacje o id zadania -->
               <input type="hidden" name="id" value="{{ zadanie.id }}"/>
               <button type="submit">Wykonane</button>
             </form>
@@ -52,5 +54,10 @@
       {% endfor %}
     </ol>
     <p><a href="{{ url_for('index') }}">Strona Główna</a></p>
+    <p>
+      <form method="POST" action="{{ url_for('usun') }}">
+        <button type="submit">Usun</button>
+      </form>
+    </p>
   </body>
 </html>

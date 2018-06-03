@@ -67,6 +67,16 @@ def zrobione():
     flash('Zmieniono status zadania.')
     return redirect(url_for('zadania'))
 
+@app.route('/niezrobione', methods=['POST'])
+def niezrobione():
+    """Zmiana statusu zadania na niewykonane."""
+    zadanie_id = request.form['id']
+    db = get_db()
+    db.execute('UPDATE zadania SET zrobione=0 WHERE id=?', [zadanie_id])
+    db.commit()
+    flash('Zmieniono status zadania.')
+    return redirect(url_for('zadania'))
+
 @app.route('/usuniete', methods=['POST'])
 def usuniete():
     """Usuniecie zadania gdy wykonane."""
@@ -76,6 +86,17 @@ def usuniete():
     db.commit()
     flash('Usunieto zadanie.')
     return redirect(url_for('zadania'))
+
+@app.route('/usun', methods=['POST'])
+def usun():
+    """Usuniecie zadan wykonanych."""
+    db = get_db()
+    db.execute('DELETE FROM zadania WHERE zrobione=1;')
+    db.commit()
+    flash('Usunieto zadania zrobione.')
+    return redirect(url_for('zadania'))
+
+
 
 
 if __name__ == '__main__':
