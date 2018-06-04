@@ -46,10 +46,10 @@ def zadania():
             db.execute('INSERT INTO zadania VALUES (?, ?, ?, ?);',
                        [None, zadanie, zrobione, data_pub])
             db.commit()
-            flash('Dodano nowe zadanie.')
+            flash('Add new task.', 'success')
             return redirect(url_for('zadania'))
 
-        error = 'Nie możesz dodać pustego zadania!'  # komunikat o błędzie
+        error = 'You can\'t add empty task!'  # komunikat o błędzie
 
     db = get_db()
     kursor = db.execute('SELECT * FROM zadania ORDER BY data_pub DESC;')
@@ -64,7 +64,7 @@ def zrobione():
     db = get_db()
     db.execute('UPDATE zadania SET zrobione=1 WHERE id=?', [zadanie_id])
     db.commit()
-    flash('Zmieniono status zadania.')
+    flash('Task Done!', 'success')
     return redirect(url_for('zadania'))
 
 @app.route('/niezrobione', methods=['POST'])
@@ -74,7 +74,7 @@ def niezrobione():
     db = get_db()
     db.execute('UPDATE zadania SET zrobione=0 WHERE id=?', [zadanie_id])
     db.commit()
-    flash('Zmieniono status zadania.')
+    flash('Task Undone :c', 'warning')
     return redirect(url_for('zadania'))
 
 @app.route('/usuniete', methods=['POST'])
@@ -84,7 +84,7 @@ def usuniete():
     db = get_db()
     db.execute('DELETE FROM zadania WHERE id=?', [zadanie_id])
     db.commit()
-    flash('Usunieto zadanie.')
+    flash('Task deleted.', 'warning')
     return redirect(url_for('zadania'))
 
 @app.route('/usun', methods=['POST'])
@@ -93,7 +93,7 @@ def usun():
     db = get_db()
     db.execute('DELETE FROM zadania WHERE zrobione=1;')
     db.commit()
-    flash('Usunieto zadania zrobione.')
+    flash('All done tasks were removed', 'warning')
     return redirect(url_for('zadania'))
 
 

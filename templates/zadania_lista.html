@@ -3,61 +3,124 @@
   <head>
     <!-- nazwa aplikacji pobrana z ustawień -->
     <title>{{ config.SITE_NAME }}</title>
-    <!-- dołączamy arkusz CSS -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-  </head>
+    <!-- dołączamy bootstrap -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
   <body>
-    <h1>{{ config.SITE_NAME }}:</h1>
-    <!-- formularz dodawania zadania -->
-    <form class="add-form" method="POST" action="{{ url_for('zadania') }}">
-      <input name="zadanie" value=""/>
-      <button type="submit">Dodaj zadanie</button>
-    </form>
+    <div class="container">
+      <h2>{{ config.SITE_NAME }}:</h2>
+      <p>Simple ToDoApp by <a href="https://github.com/Torak28">Jarosław Ciołek-Żelechowski</a></p>
+      <!-- Dodawanie Zadania -->
+      <form class="p-3 mb-2 bg-light text-dark" method="POST" action="{{ url_for('zadania') }}">
+        <div class="input-group">
+          <input type="text" class="form-control" id="TaskField" placeholder="Add new Task" name="zadanie" value=""/>
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </span>
+        </div>
+      </form>
 
-    <!-- informacje o sukcesie lub błędzie -->
-    <p>
+      <!-- informacje o sukcesie lub błędzie -->
       {% if error %}
-        <strong class="error">Błąd: {{ error }}</strong>
+        <div class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <p><strong class="error">Error: {{ error }}</strong></p>
+        </div>
       {% endif %}
 
-      {% for message in get_flashed_messages() %}
-        <strong class="success">{{ message }}</strong>
+      {% for message in get_flashed_messages(category_filter=["success"]) %}
+      <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <p><strong class="success">{{ message }}</strong></p>
+      </div>
       {% endfor %}
-    </p>
-    <ol>
-      <!-- wypisujemy kolejno wszystkie zdania -->
-      {% for zadanie in zadania %}
-        <li>
-          <!-- wyróżnienie zadań zakończonych -->
-          <form method="POST" action="{{ url_for('usuniete') }}">
-            <input type="hidden" name="id" value="{{ zadanie.id }}"/>
-            <button type="submit">Usun</button>
-          </form>
-          {% if zadanie.zrobione %}
-            <span class="done">{{ zadanie.zadanie }} – <em>{{ zadanie.data_pub }}</em></span>
-            <form method="POST" action="{{ url_for('niezrobione') }}">
-              <input type="hidden" name="id" value="{{ zadanie.id }}"/>
-              <button type="submit">Niewykonane</button>
-            </form>
-          {% else %}
-            {{ zadanie.zadanie }} – <em>{{ zadanie.data_pub }}</em>
-          {% endif %}
 
-          <!-- formularz zmiany statusu zadania -->
-          {% if not zadanie.zrobione %}
-            <form method="POST" action="{{ url_for('zrobione') }}">
-              <input type="hidden" name="id" value="{{ zadanie.id }}"/>
-              <button type="submit">Wykonane</button>
-            </form>
-          {% endif %}
-        </li>
+      {% for message in get_flashed_messages(category_filter=["warning"]) %}
+      <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <p><strong class="success">{{ message }}</strong></p>
+      </div>
       {% endfor %}
-    </ol>
-    <p><a href="{{ url_for('index') }}">Strona Główna</a></p>
-    <p>
-      <form method="POST" action="{{ url_for('usun') }}">
-        <button type="submit">Usun</button>
-      </form>
-    </p>
+
+
+      <div class="container-fluid p-3 mb-2 bg-light text-dark">
+        <dl>
+          <!-- wypisujemy kolejno wszystkie zdania -->
+          {% for zadanie in zadania %}
+            <dd>
+              {% if zadanie.zrobione %}
+              <div class="row align-items-center">
+                <!-- Wypisanie zadan skonczonych -->
+                <div class="col-md-8">
+                  <s>{{ zadanie.zadanie }}</s>
+                </div>
+                <div class="col-md-4">
+                  <div class="btn-toolbar float-right" role="toolbar">
+                    <div class="btn-group mr-2" role="group">
+                      <form method="POST" action="{{ url_for('niezrobione') }}">
+                        <input type="hidden" name="id" value="{{ zadanie.id }}"/>
+                        <button type="submit" class="btn btn-warning btn-sm">Undo</button>
+                      </form>
+                    </div>
+                    <!-- Przycisk Usun -->
+                    <div class="btn-group mr-2" role="group">
+                      <form method="POST" action="{{ url_for('usuniete') }}">
+                        <input type="hidden" name="id" value="{{ zadanie.id }}"/>
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% else %}
+                <div class="row align-items-center">
+                <!-- Wypisanie zadan -->
+                  <div class="col-md-8">
+                    {{ zadanie.zadanie }}
+                  </div>
+                  <div class="col-md-4">
+                    <div class="btn-toolbar float-right" role="toolbar">
+                      <div class="btn-group mr-2" role="group">
+                        <form method="POST" action="{{ url_for('zrobione') }}">
+                          <input type="hidden" name="id" value="{{ zadanie.id }}"/>
+                          <button type="submit" class="btn btn-success btn-sm">Done</button>
+                        </form>
+                      </div>
+                      <!-- Przycisk Usun -->
+                      <div class="btn-group mr-2" role="group">
+                        <form method="POST" action="{{ url_for('usuniete') }}">
+                          <input type="hidden" name="id" value="{{ zadanie.id }}"/>
+                          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            </dd>
+          {% endfor %}
+        </dl>
+      </div>
+
+      <div class="btn-toolbar" role="toolbar">
+        <div class="btn-group mr-2" role="group">
+          <form>
+            <a href="{{ url_for('index') }}" class="btn btn-info btn-sm" role="button">Main Page</a>
+          </form>
+        </div>
+        <div class="btn-group mr-2" role="group">
+          <form method="POST" action="{{ url_for('usun') }}">
+            <button type="submit" class="btn btn-danger btn-sm">Delete All done</button>
+          </form>
+        </div>
+      </div>
+
+
+
+    </div>
   </body>
 </html>
