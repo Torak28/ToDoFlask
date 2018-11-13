@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from flask import Flask, g, render_template, flash, redirect, url_for, request
 import os
 import sqlite3
@@ -66,6 +68,7 @@ def zrobione():
     flash('Task Done!', 'success')
     return redirect(url_for('zadania'))
 
+
 @app.route('/niezrobione', methods=['POST'])
 def niezrobione():
     """Zmiana statusu zadania na niewykonane."""
@@ -75,6 +78,7 @@ def niezrobione():
     db.commit()
     flash('Task Undone :c', 'warning')
     return redirect(url_for('zadania'))
+
 
 @app.route('/usuniete', methods=['POST'])
 def usuniete():
@@ -86,6 +90,7 @@ def usuniete():
     flash('Task deleted.', 'warning')
     return redirect(url_for('zadania'))
 
+
 @app.route('/usun', methods=['POST'])
 def usun():
     """Usuniecie zadan wykonanych."""
@@ -96,7 +101,5 @@ def usun():
     return redirect(url_for('zadania'))
 
 
-
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=80, host='0.0.0.0')
