@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from flask import Flask, g, render_template, flash, redirect, url_for, request
 import os
 import sqlite3
