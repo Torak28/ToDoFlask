@@ -58,6 +58,7 @@ def zadania():
     zadania = kursor.fetchall()
     return render_template('zadania_lista.html', zadania=zadania, error=error)
 
+
 @app.route('/zrobione', methods=['POST'])
 def zrobione():
     """Zmiana statusu zadania na wykonane."""
