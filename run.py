@@ -1,4 +1,6 @@
-import os, time
+import os
+import time
+
 
 print 'Download newest version of db'
 os.system('git pull')
